@@ -1,4 +1,4 @@
-package main
+package printer
 
 import (
 	"fmt"
@@ -6,42 +6,45 @@ import (
 	"os"
 )
 
-type Color string
-type Chars string
-type Messages string
+type color string
+type chars string
 
 const (
-	Black Color = "\x1b[1;30m"
-	Red Color = "\x1b[1;31m"
-	Green Color = "\x1b[1;32m"
-	Yellow Color = "\x1b[1;33m"
-	Blue Color = "\x1b[1;34m"
-	// Magenta Color = "\x1b[1;35m"
-	// Cyan Color = "\x1b[1;36m"
-	White Color = "\x1b[1;37m"
+	pref = "\x1b[1;"
+	suff = "m"
+	ERROR = 2
+
+	// Black color = "\x1b[1;30m"
+	red color = pref+"31"+suff
+	green color = pref+"32"+suff
+	yellow color = pref+"33"+suff
+	blue color = pref+"34"+suff
+	// Magenta color = "\x1b[1;35m"
+	// Cyan color = "\x1b[1;36m"
+	white color = pref+"37"+suff
 )
 
 const (
-	Delim Chars = ": "
-	CR Chars = "\r"
-  LF Chars = "\n"
-  Tab Chars = "\t"
+	delim chars = ": "
+	cr chars = "\r"
+  lf chars = "\n"
+  tab chars = "\t"
 )
 
 const (
-	DebugMsg = "Debug"
-	AssertMsg = "Assertion failed"
-	ErrorMsg = "Error"
-	FatalMsg = "Fatal error"
-	NoteMsg = "Note"
-	EmptyMsg = ""
+	debugMsg = "Debug"
+	assertMsg = "Assertion failed"
+	errorMsg = "Error"
+	fatalMsg = "Fatal error"
+	noteMsg = "Note"
+	emptyMsg = ""
 )
 
-const LOG_EVERY_N int = 5000
+const logEveryN int = 5000
 var last_in_place bool = false
 
 func generic_print (who string, msg string, in_place bool, 
-	params map[string]string, who_color Color, msg_color Color,
+	params map[string]string, who_color color, msg_color color,
 	log_every_n bool, line_no int, stderr bool) {
 
 	var out io.Writer
@@ -50,21 +53,24 @@ func generic_print (who string, msg string, in_place bool,
 	} else {
 		out = os.Stdout
 	}
-	if !log_every_n || log_every_n && line_no % LOG_EVERY_N == 0 {
+	if !log_every_n || log_every_n && line_no % logEveryN == 0 {
 		if last_in_place && !in_place {
-      fmt.Fprint(out,LF)
+      fmt.Fprint(out,cr+lf)
       last_in_place = false
 		} else if in_place {
 			last_in_place = true
 		}
-
-		fmt.Fprint(out,who_color,who,Delim,msg_color,msg)
+    if who == "" {
+      fmt.Fprint(out,msg_color,msg)
+    } else {
+		  fmt.Fprint(out,who_color,who,delim,msg_color,msg)
+		}
 		if in_place {
-			fmt.Fprint(out,CR)
+			fmt.Fprint(out,cr)
 		} else {
-			fmt.Fprint(out,LF, White)
+			fmt.Fprint(out,cr+lf, white)
 			for s1,s2 := range params {
-				fmt.Fprint(out,Tab, s1, Delim, s2, LF)
+				fmt.Fprint(out,tab, s1, delim, s2, cr+lf)
 			}
 		}
 	}
@@ -72,7 +78,7 @@ func generic_print (who string, msg string, in_place bool,
 
 func Debug (args ...interface{}) {
 	var (
-		who string = DebugMsg
+		who string = debugMsg
 		msg string
 		params map[string]string
 		in_place bool = false
@@ -84,22 +90,22 @@ func Debug (args ...interface{}) {
 	switch len(args) {
 		case 0: return
 		case 1: 
-			msg = args[0].(string)
+			msg = fmt.Sprintf("%s",args[0])
 		case 2:
-			who = args[1].(string)
-			msg = args[0].(string)
+			who = fmt.Sprintf("%s",args[1])
+			msg = fmt.Sprintf("%s",args[0])
 		case 3:
-			who = args[1].(string)
-			msg = args[0].(string)
+			who = fmt.Sprintf("%s",args[1])
+			msg = fmt.Sprintf("%s",args[0])
 			params = args[2].(map[string]string)
 		case 4:
-			who = args[1].(string)
-			msg = args[0].(string)
+			who = fmt.Sprintf("%s",args[1])
+			msg = fmt.Sprintf("%s",args[0])
 			params = args[2].(map[string]string)
 			in_place = args[3].(bool)
 		case 6:
-			who = args[1].(string)
-			msg = args[0].(string)
+			who = fmt.Sprintf("%s",args[1])
+			msg = fmt.Sprintf("%s",args[0])
 			params = args[2].(map[string]string)
 			in_place = args[3].(bool)
 			log_every_n = args[4].(bool)
@@ -110,8 +116,8 @@ func Debug (args ...interface{}) {
 		msg,
 		in_place,
 		params,
-		Green,
-		White,
+		green,
+		white,
 		log_every_n,
 		line_no,
 		stderr,
@@ -120,7 +126,7 @@ func Debug (args ...interface{}) {
 
 func Note (args ...interface{}) {
 	var (
-		who string = NoteMsg
+		who string = noteMsg
 		msg string
 		params map[string]string
 		in_place bool = false
@@ -132,22 +138,22 @@ func Note (args ...interface{}) {
 	switch len(args) {
 		case 0: return
 		case 1: 
-			msg = args[0].(string)
+			msg = fmt.Sprintf("%s",args[0])
 		case 2:
-			who = args[1].(string)
-			msg = args[0].(string)
+			who = fmt.Sprintf("%s",args[1])
+			msg = fmt.Sprintf("%s",args[0])
 		case 3:
-			who = args[1].(string)
-			msg = args[0].(string)
+			who = fmt.Sprintf("%s",args[1])
+			msg = fmt.Sprintf("%s",args[0])
 			params = args[2].(map[string]string)
 		case 4:
-			who = args[1].(string)
-			msg = args[0].(string)
+			who = fmt.Sprintf("%s",args[1])
+			msg = fmt.Sprintf("%s",args[0])
 			params = args[2].(map[string]string)
 			in_place = args[3].(bool)
 		case 6:
-			who = args[1].(string)
-			msg = args[0].(string)
+			who = fmt.Sprintf("%s",args[1])
+			msg = fmt.Sprintf("%s",args[0])
 			params = args[2].(map[string]string)
 			in_place = args[3].(bool)
 			log_every_n = args[4].(bool)
@@ -158,8 +164,8 @@ func Note (args ...interface{}) {
 		msg,
 		in_place,
 		params,
-		Yellow,
-		White,
+		yellow,
+		white,
 		log_every_n,
 		line_no,
 		stderr,
@@ -168,7 +174,7 @@ func Note (args ...interface{}) {
 
 func Error (args ...interface{}) {
 	var (
-		who string = ErrorMsg
+		who string = errorMsg
 		msg string
 		params map[string]string
 		in_place bool = false
@@ -180,13 +186,13 @@ func Error (args ...interface{}) {
 	switch len(args) {
 		case 0: return
 		case 1: 
-			msg = args[0].(string)
+			msg = fmt.Sprintf("%s",args[0])
 		case 2:
-			who = args[1].(string)
-			msg = args[0].(string)
+			who = fmt.Sprintf("%s",args[1])
+			msg = fmt.Sprintf("%s",args[0])
 		case 3:
-			who = args[1].(string)
-			msg = args[0].(string)
+			who = fmt.Sprintf("%s",args[1])
+			msg = fmt.Sprintf("%s",args[0])
 			params = args[2].(map[string]string)
 	}
 	generic_print(
@@ -194,8 +200,8 @@ func Error (args ...interface{}) {
 		msg,
 		in_place,
 		params,
-		Red,
-		White,
+		red,
+		white,
 		log_every_n,
 		line_no,
 		stderr,
@@ -204,7 +210,7 @@ func Error (args ...interface{}) {
 
 func Fatal (args ...interface{}) {
 	var (
-		who string = FatalMsg
+		who string = fatalMsg
 		msg string
 		params map[string]string
 		in_place bool = false
@@ -216,13 +222,13 @@ func Fatal (args ...interface{}) {
 	switch len(args) {
 		case 0: panic(msg)
 		case 1: 
-			msg = args[0].(string)
+			msg = fmt.Sprintf("%s",args[0])
 		case 2:
-			who = args[1].(string)
-			msg = args[0].(string)
+			who = fmt.Sprintf("%s",args[1])
+			msg = fmt.Sprintf("%s",args[0])
 		case 3:
-			who = args[1].(string)
-			msg = args[0].(string)
+			who = fmt.Sprintf("%s",args[1])
+			msg = fmt.Sprintf("%s",args[0])
 			params = args[2].(map[string]string)
 	}
 	generic_print(
@@ -230,27 +236,11 @@ func Fatal (args ...interface{}) {
 		msg,
 		in_place,
 		params,
-		Red,
-		White,
+		red,
+		white,
 		log_every_n,
 		line_no,
 		stderr,
 	)
-	panic(msg)
-}
-
-func fatal_func() {
-	defer func() {
-		err := recover()
-		Debug(err,"Recovered from fatal error")
-	}()
-	Fatal("Fatal error","Fatal msg")
-}
-
-func main () {
-	
-	Debug("Hello, world!","Debug msg")
-	Note("Hello, world!","Note msg")
-	Error("Hello, world!","Error msg")
-	fatal_func()
+	os.Exit(ERROR)
 }

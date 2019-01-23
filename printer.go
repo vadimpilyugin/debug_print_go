@@ -90,22 +90,22 @@ func Debug (args ...interface{}) {
 	switch len(args) {
 		case 0: return
 		case 1: 
-			msg = fmt.Sprintf("%s",args[0])
+			msg = fmt.Sprintf("%v",args[0])
 		case 2:
-			who = fmt.Sprintf("%s",args[1])
-			msg = fmt.Sprintf("%s",args[0])
+			who = fmt.Sprintf("%v",args[1])
+			msg = fmt.Sprintf("%v",args[0])
 		case 3:
-			who = fmt.Sprintf("%s",args[1])
-			msg = fmt.Sprintf("%s",args[0])
+			who = fmt.Sprintf("%v",args[1])
+			msg = fmt.Sprintf("%v",args[0])
 			params = args[2].(map[string]string)
 		case 4:
-			who = fmt.Sprintf("%s",args[1])
-			msg = fmt.Sprintf("%s",args[0])
+			who = fmt.Sprintf("%v",args[1])
+			msg = fmt.Sprintf("%v",args[0])
 			params = args[2].(map[string]string)
 			in_place = args[3].(bool)
 		case 6:
-			who = fmt.Sprintf("%s",args[1])
-			msg = fmt.Sprintf("%s",args[0])
+			who = fmt.Sprintf("%v",args[1])
+			msg = fmt.Sprintf("%v",args[0])
 			params = args[2].(map[string]string)
 			in_place = args[3].(bool)
 			log_every_n = args[4].(bool)
@@ -138,22 +138,22 @@ func Note (args ...interface{}) {
 	switch len(args) {
 		case 0: return
 		case 1: 
-			msg = fmt.Sprintf("%s",args[0])
+			msg = fmt.Sprintf("%v",args[0])
 		case 2:
-			who = fmt.Sprintf("%s",args[1])
-			msg = fmt.Sprintf("%s",args[0])
+			who = fmt.Sprintf("%v",args[1])
+			msg = fmt.Sprintf("%v",args[0])
 		case 3:
-			who = fmt.Sprintf("%s",args[1])
-			msg = fmt.Sprintf("%s",args[0])
+			who = fmt.Sprintf("%v",args[1])
+			msg = fmt.Sprintf("%v",args[0])
 			params = args[2].(map[string]string)
 		case 4:
-			who = fmt.Sprintf("%s",args[1])
-			msg = fmt.Sprintf("%s",args[0])
+			who = fmt.Sprintf("%v",args[1])
+			msg = fmt.Sprintf("%v",args[0])
 			params = args[2].(map[string]string)
 			in_place = args[3].(bool)
 		case 6:
-			who = fmt.Sprintf("%s",args[1])
-			msg = fmt.Sprintf("%s",args[0])
+			who = fmt.Sprintf("%v",args[1])
+			msg = fmt.Sprintf("%v",args[0])
 			params = args[2].(map[string]string)
 			in_place = args[3].(bool)
 			log_every_n = args[4].(bool)
@@ -186,13 +186,13 @@ func Error (args ...interface{}) {
 	switch len(args) {
 		case 0: return
 		case 1: 
-			msg = fmt.Sprintf("%s",args[0])
+			msg = fmt.Sprintf("%v",args[0])
 		case 2:
-			who = fmt.Sprintf("%s",args[1])
-			msg = fmt.Sprintf("%s",args[0])
+			who = fmt.Sprintf("%v",args[1])
+			msg = fmt.Sprintf("%v",args[0])
 		case 3:
-			who = fmt.Sprintf("%s",args[1])
-			msg = fmt.Sprintf("%s",args[0])
+			who = fmt.Sprintf("%v",args[1])
+			msg = fmt.Sprintf("%v",args[0])
 			params = args[2].(map[string]string)
 	}
 	generic_print(
@@ -222,13 +222,13 @@ func Fatal (args ...interface{}) {
 	switch len(args) {
 		case 0: panic(msg)
 		case 1: 
-			msg = fmt.Sprintf("%s",args[0])
+			msg = fmt.Sprintf("%v",args[0])
 		case 2:
-			who = fmt.Sprintf("%s",args[1])
-			msg = fmt.Sprintf("%s",args[0])
+			who = fmt.Sprintf("%v",args[1])
+			msg = fmt.Sprintf("%v",args[0])
 		case 3:
-			who = fmt.Sprintf("%s",args[1])
-			msg = fmt.Sprintf("%s",args[0])
+			who = fmt.Sprintf("%v",args[1])
+			msg = fmt.Sprintf("%v",args[0])
 			params = args[2].(map[string]string)
 	}
 	generic_print(
